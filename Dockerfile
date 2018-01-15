@@ -23,6 +23,7 @@
 #  THE SOFTWARE.
 
 FROM openjdk:8-jdk
+
 MAINTAINER Martin Goldhahn <mgoldhahn@gmail.com>
 
 ENV MAVEN_VERSION=3.5.2
@@ -45,25 +46,22 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
     && chmod 644 /usr/share/jenkins/slave.jar
 
 # download jenkins-jnlp-agent
-RUN \
-    cd /tmp
-    curl -O https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/${JNLP_TAG}/jenkins-slave && \
-    sha1sum jenkins-slave | grep ${JENKINS_SLAVE_SHA1} && \
-    mv jenkins-slave /usr/local/bin/jenkins-slave
+RUN /tmp \
+    && curl -O https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/${JNLP_TAG}/jenkins-slave \
+    && sha1sum jenkins-slave | grep ${JENKINS_SLAVE_SHA1} \
+    && mv jenkins-slave /usr/local/bin/jenkins-slave
 
 # downlaod Maven
-RUN \
-    mkdir -p /usr/share/maven && \
-    cd /tmp && \
-    curl -O https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
-    sha1sum apache-maven-${MAVEN_VERSION}-bin.tar.gz | grep ${MAVEN_SHA1} && \
-    cd /tmp && tar -xz -f apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /usr/share/maven --strip-components=1 && \
-    rm /tmp/apache-maven*
+RUN mkdir -p /usr/share/maven \
+    && cd /tmp \
+    && curl -O https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    && sha1sum apache-maven-${MAVEN_VERSION}-bin.tar.gz | grep ${MAVEN_SHA1} \
+    && cd /tmp && tar -xz -f apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /usr/share/maven --strip-components=1 \
+    && rm /tmp/apache-maven*
 
 # configure maven
-RUN \
-    ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
-    echo export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 >/etc/mavenrc
+RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn \
+    && echo export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 >/etc/mavenrc
 
 USER jenkins
 ENV AGENT_WORKDIR=${AGENT_WORKDIR}
