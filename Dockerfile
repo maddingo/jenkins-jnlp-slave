@@ -42,14 +42,17 @@ LABEL Description="This is a jenkins slave including maven" Vendor="Jenkins proj
 
 # download jenkins agent
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${SLAVE_VERSION}/remoting-${SLAVE_VERSION}.jar \
+    && sha1sum /usr/share/jenkins/slave.jar | grep ${SLAVE_SHA1} \
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/slave.jar
 
 # download jenkins-jnlp-agent
-RUN /tmp \
+RUN cd /tmp \
     && curl -O https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/${JNLP_TAG}/jenkins-slave \
-    && sha1sum jenkins-slave | grep ${JENKINS_SLAVE_SHA1} \
-    && mv jenkins-slave /usr/local/bin/jenkins-slave
+    && sha1sum jenkins-slave | grep ${JNLP_SHA1} \
+    && mkdir -p /usr/local/bin \
+    && mv jenkins-slave /usr/local/bin/jenkins-slave \
+    && chmod +x /usr/local/bin/jenkins-slave
 
 # downlaod Maven
 RUN mkdir -p /usr/share/maven \
