@@ -38,7 +38,7 @@ ENV AGENT_WORKDIR=/home/jenkins/agent
 ENV HOME /home/jenkins
 RUN groupadd -g 10000 jenkins
 RUN useradd -c "Jenkins user" -d $HOME -u 10000 -g 10000 -m jenkins
-LABEL Description="This is a jenkins slave including maven" Vendor="Jenkins project" Version="3.16"
+LABEL Description="This is a jenkins slave including maven"
 
 # download jenkins agent
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${SLAVE_VERSION}/remoting-${SLAVE_VERSION}.jar \
