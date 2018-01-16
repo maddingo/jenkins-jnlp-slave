@@ -26,16 +26,16 @@ FROM openjdk:8-jdk
 
 MAINTAINER Martin Goldhahn <mgoldhahn@gmail.com>
 
-ENV MAVEN_VERSION=3.5.2
-ENV MAVEN_SHA1=190dcebb8a080f983af4420cac4f3ece7a47dd64
-ENV SLAVE_VERSION=3.16
-ENV SLAVE_SHA1=98133ca4027b00ed1a1d87241708ac05acc20e8b
-ENV JNLP_TAG=3.16-1
-ENV JNLP_SHA1=d537b4885845524b98be001a2845362f396d58aa
-ENV AGENT_WORKDIR=/home/jenkins/agent
+ARG MAVEN_VERSION=3.5.2
+ARG MAVEN_SHA1=190dcebb8a080f983af4420cac4f3ece7a47dd64
+ARG SLAVE_VERSION=3.16
+ARG SLAVE_SHA1=98133ca4027b00ed1a1d87241708ac05acc20e8b
+ARG JNLP_TAG=3.16-1
+ARG JNLP_SHA1=d537b4885845524b98be001a2845362f396d58aa
+ARG AGENT_WORKDIR=/home/jenkins/agent
 
 
-ENV HOME /home/jenkins
+ARG HOME=/home/jenkins
 RUN groupadd -g 10000 jenkins
 RUN useradd -c "Jenkins user" -d $HOME -u 10000 -g 10000 -m jenkins
 LABEL Description="This is a jenkins slave including maven"
